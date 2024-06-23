@@ -13,4 +13,6 @@
 9  := λf.λx.f (f (f (f (f (f (f (f (f x))))))))
 
 # Basic arithmetic
-ADD := λx.λy.x y
+SUCC := λn.λf.λx. f ( n^f x )
+ADD  := λm.λn.λf.λx. m^SUCC n f x
+MUL  := λm.λn.λf.λx. m^ADD 
