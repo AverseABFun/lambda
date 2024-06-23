@@ -11,6 +11,20 @@
 7  := λf.λx. f (f (f (f (f (f (f x))))))
 8  := λf.λx. f (f (f (f (f (f (f (f x)))))))
 9  := λf.λx. f (f (f (f (f (f (f (f (f x))))))))
+10 := λf.λx. f (f (f (f (f (f (f (f (f (f x)))))))))
+
+# Church numerals(easier version for making bigger numbers)
+0_  := λn. IFTHENELSE (ISZERO n) 0 n
+1_  := λn. IFTHENELSE (ISZERO n) 1 
+2_  := 
+3_  := 
+4_  := 
+5_  := 
+6_  := 
+7_  := 
+8_  := 
+9_  := 
+E_  := 0
 
 # Church booleans
 TRUE  := λx.λy .x
@@ -24,7 +38,12 @@ OR         := λx.λy. x TRUE y
 NOT        := λx. x FALSE TRUE
 IFTHENELSE := λx.λi.λe. x i e
 ISZERO     := λn. n (λx. FALSE) TRUE
-EQUAL      := λm.λn. ISZERO (SUB m n)
+LEQ        := λm.λn. ISZERO (SUB m n)
+NUMEQUAL   := λm.λn. AND (LEQ m n) (LEQ n m)
+
+# Error codes
+ERR_NONE   := λv. PAIR FALSE v
+ERR_TYPE   := λv. PAIR TRUE 1
 
 # Pairs (thanks, wikipedia!)
 PAIR   := λx.λy.λf.f x y
@@ -43,6 +62,10 @@ MUL  := λm.λn. m^ADD n n
 PRED := λn.FIRST (n^Φ (PAIR 0 0))
 SUB  := λm.λn. n^PRED m
 
+DIV1 := λc.λn.λm.λf.λx. (λd. ISZERO d x (f (c d m f x))) (SUB n m)
+DIV2 := Y DIV1
+DIV  := λn. DIV2 (SUCC n)
+
 # Defining things
 let     := λf.λe.λN.λi.λM. SECOND (PAIR ((λf.M) N) N)
 in      := λn. TRUE
@@ -58,16 +81,26 @@ wrapdef := λf. let R = (recwrap f) in f
 # And use it like let
 
 # Common abbriviations(according to wikipedia)
-I      := λx.x
-S      := λx.λy.λz.x z (y z)
-K      := λx.λy.x
-B      := λx.λy.λz.x (y z)
-C      := λx.λy.λz.x z y
-W      := λx.λy.x y y
+I     := λx.x
+S     := λx.λy.λz.x z (y z)
+K     := λx.λy.x
+B     := λx.λy.λz.x (y z)
+C     := λx.λy.λz.x z y
+W     := λx.λy.x y y
 ω,Δ,U := λx.x x
-Ω      := ω ω
+Ω     := ω ω
+Y     := λf. (λx. f(x x))(λx. f(x x))
 
 # Type functions
-type   := λf.λk. λt.IFTHENELSE (ISZERO t) f k
-NONE   := 0
-NUMBER := 1
+maketyped := λf.λk. λt.IFTHENELSE (ISZERO t) f k
+NONE      := 0
+NUMBER    := 1
+PAIR      := 2
+BOOL      := 3
+VARIANT   := 4
+
+typeof    := λo. o 1
+istype    := λx.λt. OR (NUMEQUAL (typeof x) t) (NUMEQUAL (typeof x) VARIANT)
+typeerr   := λx.λt. IFTHENELSE (OR (NUMEQUAL (typeof x) t) (NUMEQUAL (typeof x) VARIANT)) (ERR_NONE x) (ERR_TYPE x)
+typeval   := λx. x 0
+# for example, λx.λy. IFTHENELSE (AND (istype x NUMBER) (istype y NUMBER)) (ADD (typeval x) (typeval y)) (typeerr x NUMBER)
