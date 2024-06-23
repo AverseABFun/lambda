@@ -1,18 +1,73 @@
 # Thanks wikipedia for a majority of this
 
 # Church numerals
-0  := λf.λx.x
-1  := λf.λx.f x
-2  := λf.λx.f (f x)
-3  := λf.λx.f (f (f x))
-4  := λf.λx.f (f (f (f x)))
-5  := λf.λx.f (f (f (f (f x))))
-6  := λf.λx.f (f (f (f (f (f x)))))
-7  := λf.λx.f (f (f (f (f (f (f x))))))
-8  := λf.λx.f (f (f (f (f (f (f (f x)))))))
-9  := λf.λx.f (f (f (f (f (f (f (f (f x))))))))
+0  := λf.λx. x
+1  := λf.λx. f x
+2  := λf.λx. f (f x)
+3  := λf.λx. f (f (f x))
+4  := λf.λx. f (f (f (f x)))
+5  := λf.λx. f (f (f (f (f x))))
+6  := λf.λx. f (f (f (f (f (f x)))))
+7  := λf.λx. f (f (f (f (f (f (f x))))))
+8  := λf.λx. f (f (f (f (f (f (f (f x)))))))
+9  := λf.λx. f (f (f (f (f (f (f (f (f x))))))))
+
+# Church booleans
+TRUE  := λx.λy .x
+FALSE := λx.λy .y
+T     := TRUE
+F     := FALSE
+
+# Boolean functions
+AND        := λx.λy. x y FALSE
+OR         := λx.λy. x TRUE y
+NOT        := λx. x FALSE TRUE
+IFTHENELSE := λx.λi.λe. x i e
+ISZERO     := λn. n (λx. FALSE) TRUE
+EQUAL      := λm.λn. ISZERO (SUB m n)
+
+# Pairs (thanks, wikipedia!)
+PAIR   := λx.λy.λf.f x y
+FIRST  := λp.p TRUE
+SECOND := λp.p FALSE
+NIL    := λx.TRUE
+NULL   := λp.p (λx.λy.FALSE)
+# no clue why it's called that but it returns a pair of (x, x+1)
+Φ := λx.PAIR (SECOND x) (SUCC (SECOND x))
 
 # Basic arithmetic
-SUCC := λn.λf.λx. f ( n^f x )
-ADD  := λm.λn.λf.λx. m^SUCC n f x
-MUL  := λm.λn.λf.λx. m^ADD 
+SUCC := λn.SECOND (n^Φ (PAIR 0 0))
+ADD  := λm.λn. m^SUCC n
+MUL  := λm.λn. m^ADD n n
+# okay *wow* this is clever. didn't understand it for a while but WOW
+PRED := λn.FIRST (n^Φ (PAIR 0 0))
+SUB  := λm.λn. n^PRED m
+
+# Defining things
+let     := λf.λe.λN.λi.λM. SECOND (PAIR ((λf.M) N) N)
+in      := λn. TRUE
+=       := λn. TRUE
+# Now you can do `let f = N in M` and yes all of the spaces are necessary
+# Also it returns N
+
+letrec  := λf.λe.λN.λi.λM. let f = (wrapdef N) in M
+recwrap := λf.λa. f a
+wrapdef := λf. let R = (recwrap f) in f
+# letrec is used to define recursive functions
+# Call "R" in the recursive function to recurse
+# And use it like let
+
+# Common abbriviations(according to wikipedia)
+I      := λx.x
+S      := λx.λy.λz.x z (y z)
+K      := λx.λy.x
+B      := λx.λy.λz.x (y z)
+C      := λx.λy.λz.x z y
+W      := λx.λy.x y y
+ω,Δ,U := λx.x x
+Ω      := ω ω
+
+# Type functions
+type   := λf.λk. λt.IFTHENELSE (ISZERO t) f k
+NONE   := 0
+NUMBER := 1
