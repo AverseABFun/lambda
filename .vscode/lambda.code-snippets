@@ -1,0 +1,8 @@
+{
+	"Lambda Symbol": {
+	  "prefix": "lambda",
+	  "body": ["λ"],
+	  "description": "Replaces 'lambda' with 'λ'"
+	}
+  }
+  

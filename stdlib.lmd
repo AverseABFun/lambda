@@ -1,0 +1,16 @@
+# Thanks wikipedia for a majority of this
+
+# Church numerals
+0  := λf.λx.x
+1  := λf.λx.f x
+2  := λf.λx.f (f x)
+3  := λf.λx.f (f (f x))
+4  := λf.λx.f (f (f (f x)))
+5  := λf.λx.f (f (f (f (f x))))
+6  := λf.λx.f (f (f (f (f (f x)))))
+7  := λf.λx.f (f (f (f (f (f (f x))))))
+8  := λf.λx.f (f (f (f (f (f (f (f x)))))))
+9  := λf.λx.f (f (f (f (f (f (f (f (f x))))))))
+
+# Basic arithmetic
+ADD := λx.λy.x y
