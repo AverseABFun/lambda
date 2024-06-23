@@ -33,7 +33,7 @@ SECOND := λp.p FALSE
 NIL    := λx.TRUE
 NULL   := λp.p (λx.λy.FALSE)
 # no clue why it's called that but it returns a pair of (x, x+1)
-Φ := λx.PAIR (SECOND x) (SUCC (SECOND x))
+Φ      := λx. PAIR (SECOND x) (SUCC (SECOND x))
 
 # Basic arithmetic
 SUCC := λn.SECOND (n^Φ (PAIR 0 0))
