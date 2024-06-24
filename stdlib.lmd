@@ -14,17 +14,18 @@
 10 := λf.λx. f (f (f (f (f (f (f (f (f (f x)))))))))
 
 # Church numerals(easier version for making bigger numbers)
-0_  := λn. IFTHENELSE (ISZERO n) 0 n
-1_  := λn. IFTHENELSE (ISZERO n) 1 
-2_  := 
-3_  := 
-4_  := 
-5_  := 
-6_  := 
-7_  := 
-8_  := 
-9_  := 
-E_  := 0
+0_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 0 1) (PAIR (FIRST n) (SUCC (SECOND n)))
+1_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 1 1) (PAIR (PLUS (FIRST n) (POW 10 (SECOND n))) (SUCC (SECOND n)))
+2_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 2 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 2)) (SUCC (SECOND n)))
+3_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 3 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 3)) (SUCC (SECOND n)))
+4_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 4 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 4)) (SUCC (SECOND n)))
+5_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 5 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 5)) (SUCC (SECOND n)))
+6_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 6 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 6)) (SUCC (SECOND n)))
+7_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 7 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 7)) (SUCC (SECOND n)))
+8_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 8 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 8)) (SUCC (SECOND n)))
+9_  := λn. IFTHENELSE (ISZERO (SECOND n)) (PAIR 9 1) (PAIR (PLUS (FIRST n) (MUL (POW 10 (SECOND n)) 9)) (SUCC (SECOND n)))
+E_  := PAIR 0 0
+B_  := λn. FIRST n
 
 # Church booleans
 TRUE  := λx.λy .x
@@ -55,16 +56,17 @@ NULL   := λp.p (λx.λy.FALSE)
 Φ      := λx. PAIR (SECOND x) (SUCC (SECOND x))
 
 # Basic arithmetic
-SUCC := λn.SECOND (n^Φ (PAIR 0 0))
-ADD  := λm.λn. m^SUCC n
-MUL  := λm.λn. m^ADD n n
+SUCC  := λn.SECOND (n^Φ (PAIR 0 0))
+ADD   := λm.λn. m^SUCC n
+MUL   := λm.λn. m^ADD n n
+EXP   := λm.λn.n m
 # okay *wow* this is clever. didn't understand it for a while but WOW
-PRED := λn.FIRST (n^Φ (PAIR 0 0))
-SUB  := λm.λn. n^PRED m
+PRED  := λn.FIRST (n^Φ (PAIR 0 0))
+SUB   := λm.λn. n^PRED m
 
-DIV1 := λc.λn.λm.λf.λx. (λd. ISZERO d x (f (c d m f x))) (SUB n m)
-DIV2 := Y DIV1
-DIV  := λn. DIV2 (SUCC n)
+DIV1  := λc.λn.λm.λf.λx. (λd. ISZERO d x (f (c d m f x))) (SUB n m)
+DIV2  := Y DIV1
+DIV   := λn. DIV2 (SUCC n)
 
 # Defining things
 let     := λf.λe.λN.λi.λM. SECOND (PAIR ((λf.M) N) N)
