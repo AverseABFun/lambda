@@ -1,0 +1,6 @@
+_INCLUDES := stdlib
+# Includes HAVE to be the very first line and are the only exception(besides comments and stdout/stdin/stderr) to the rule of everything being lambda calculus
+# If you have multiple, they are split by a comma. Also, spaces cannot be in include paths.
+
+PRINT (DIV 4 2)
+LOG (BEG H_ e_ l_ l_ o_ ,_ w_ o_ r_ l_ d_ !_ END)
